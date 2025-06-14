@@ -143,6 +143,24 @@
                     return window.test_driver_internal.bidi.bluetooth.simulate_adapter(params);
                 },
                 /**
+                 * Disables the bluetooth simulation with the given params. Matches the
+                 * `bluetooth.disableSimulation <https://webbluetoothcg.github.io/web-bluetooth/#bluetooth-disableSimulation-command>`_
+                 * WebDriver BiDi command.
+                 *
+                 * @example
+                 * await test_driver.bidi.bluetooth.disable_simulation();
+                 *
+                 * @param {object} params - Parameters for the command.
+                 * @param {Context} [params.context] The optional context parameter specifies in
+                 * which browsing context to disable the simulation for. If not provided, the
+                 * current browsing context is used.
+                 * @returns {Promise} fulfilled after the simulation is disabled, or rejected if
+                 * the operation fails.
+                 */
+                disable_simulation: function (params) {
+                    return window.test_driver_internal.bidi.bluetooth.disable_simulation(params);
+                },
+                /**
                  * Creates a simulated bluetooth peripheral with the given params.
                  * Matches the
                  * `bluetooth.simulatePreconnectedPeripheral <https://webbluetoothcg.github.io/web-bluetooth/#bluetooth-simulateconnectedperipheral-command>`_
@@ -184,6 +202,63 @@
                 simulate_preconnected_peripheral: function(params) {
                     return window.test_driver_internal.bidi.bluetooth
                         .simulate_preconnected_peripheral(params);
+                },
+                /**
+                 * Simulates a GATT connection response for a given peripheral.
+                 * Matches the `bluetooth.simulateGattConnectionResponse
+                 * <https://webbluetoothcg.github.io/web-bluetooth/#bluetooth-simulategattconnectionresponse-command>`_
+                 * WebDriver BiDi command.
+                 *
+                 * @example
+                 * await test_driver.bidi.bluetooth.simulate_gatt_connection_response({
+                 *     "address": "09:09:09:09:09:09",
+                 *     "code": 0x0
+                 * });
+                 *
+                 * @param {object} params - Parameters for the command.
+                 * @param {string} params.address - The address of the simulated
+                 * bluetooth peripheral. Matches the
+                 * `bluetooth.SimulateGattConnectionResponseParameters:peripheral <https://webbluetoothcg.github.io/web-bluetooth/#bluetooth-simulategattconnectionresponse-command>`_
+                 * value.
+                 * @param {number} params.code - The response code for a GATT connection attempted.
+                 * Matches the
+                 * `bluetooth.SimulateGattConnectionResponseParameters:code <https://webbluetoothcg.github.io/web-bluetooth/#bluetooth-simulategattconnectionresponse-command>`_
+                 * value.
+                 * @param {Context} [params.context] The optional context parameter specifies in
+                 * which browsing context the GATT connection response should be simulated. If not
+                 * provided, the current browsing context is used.
+                 * @returns {Promise} fulfilled after the GATT connection response
+                 * is simulated, or rejected if the operation fails.
+                 */
+                simulate_gatt_connection_response: function(params) {
+                    return window.test_driver_internal.bidi.bluetooth
+                        .simulate_gatt_connection_response(params);
+                },
+                /**
+                 * Simulates a GATT disconnection for a given peripheral.
+                 * Matches the `bluetooth.simulateGattDisconnection
+                 * <https://webbluetoothcg.github.io/web-bluetooth/#bluetooth-simulategattdisconnection-command>`_
+                 * WebDriver BiDi command.
+                 *
+                 * @example
+                 * await test_driver.bidi.bluetooth.simulate_gatt_disconnection({
+                 *     "address": "09:09:09:09:09:09",
+                 * });
+                 *
+                 * @param {object} params - Parameters for the command.
+                 * @param {string} params.address - The address of the simulated
+                 * bluetooth peripheral. Matches the
+                 * `bluetooth.SimulateGattDisconnectionParameters:address <https://webbluetoothcg.github.io/web-bluetooth/#bluetooth-simulategattdisconnection-command>`_
+                 * value.
+                 * @param {Context} [params.context] The optional context parameter specifies in
+                 * which browsing context the GATT disconnection should be simulated. If not
+                 * provided, the current browsing context is used.
+                 * @returns {Promise} fulfilled after the GATT disconnection
+                 * is simulated, or rejected if the operation fails.
+                 */
+                simulate_gatt_disconnection: function(params) {
+                    return window.test_driver_internal.bidi.bluetooth
+                        .simulate_gatt_disconnection(params);
                 },
                 /**
                  * `bluetooth.RequestDevicePromptUpdatedParameters <https://webbluetoothcg.github.io/web-bluetooth/#bluetooth-requestdevicepromptupdated-event>`_
@@ -251,15 +326,133 @@
                                 });
                         });
                     },
+                },
+                /**
+                 * `bluetooth.GattConnectionAttemptedParameters <https://webbluetoothcg.github.io/web-bluetooth/#bluetooth-gattConnectionAttempted-event>`_
+                 * event.
+                 */
+                gatt_connection_attempted: {
+                    /**
+                     * @typedef {object} GattConnectionAttempted
+                     * `bluetooth.GattConnectionAttempted <https://webbluetoothcg.github.io/web-bluetooth/#bluetooth-gattConnectionAttempted-event>`_
+                     * event.
+                     */
+
+                    /**
+                     * Subscribes to the event. Events will be emitted only if
+                     * there is a subscription for the event. This method does
+                     * not add actual listeners. To listen to the event, use the
+                     * `on` or `once` methods. The buffered events will be
+                     * emitted before the command promise is resolved.
+                     *
+                     * @param {object} [params] Parameters for the subscription.
+                     * @param {null|Array.<(Context)>} [params.contexts] The
+                     * optional contexts parameter specifies which browsing
+                     * contexts to subscribe to the event on. It should be
+                     * either an array of Context objects, or null. If null, the
+                     * event will be subscribed to globally. If omitted, the
+                     * event will be subscribed to on the current browsing
+                     * context.
+                     * @returns {Promise<void>} Resolves when the subscription
+                     * is successfully done.
+                     */
+                    subscribe: async function(params = {}) {
+                        assertBidiIsEnabled();
+                        return window.test_driver_internal.bidi.bluetooth
+                            .gatt_connection_attempted.subscribe(params);
+                    },
+                    /**
+                     * Adds an event listener for the event.
+                     *
+                     * @param {function(GattConnectionAttempted): void} callback The
+                     * callback to be called when the event is emitted. The
+                     * callback is called with the event object as a parameter.
+                     * @returns {function(): void} A function that removes the
+                     * added event listener when called.
+                     */
+                    on: function(callback) {
+                        assertBidiIsEnabled();
+                        return window.test_driver_internal.bidi.bluetooth
+                            .gatt_connection_attempted.on(callback);
+                    },
+                    /**
+                     * Adds an event listener for the event that is only called
+                     * once and removed afterward.
+                     *
+                     * @return {Promise<GattConnectionAttempted>} The promise which
+                     * is resolved with the event object when the event is emitted.
+                     */
+                    once: function() {
+                        assertBidiIsEnabled();
+                        return new Promise(resolve => {
+                            const remove_handler =
+                                window.test_driver_internal.bidi.bluetooth
+                                    .gatt_connection_attempted.on(event => {
+                                    resolve(event);
+                                    remove_handler();
+                                });
+                        });
+                    },
                 }
             },
             /**
-             * `log <https://w3c.github.io/webdriver-bidi/#module-log>`_ module.
+             * `emulation <https://www.w3.org/TR/webdriver-bidi/#module-emulation>`_ module.
+             */
+            emulation: {
+                /**
+                 * Overrides the geolocation coordinates for the specified
+                 * browsing contexts.
+                 * Matches the `emulation.setGeolocationOverride
+                 * <https://w3c.github.io/webdriver-bidi/#command-emulation-setGeolocationOverride>`_
+                 * WebDriver BiDi command.
+                 *
+                 * @example
+                 * await test_driver.bidi.emulation.set_geolocation_override({
+                 *     coordinates: {
+                 *         latitude: 52.51,
+                 *         longitude: 13.39,
+                 *         accuracy: 0.5,
+                 *         altitude: 34,
+                 *         altitudeAccuracy: 0.75,
+                 *         heading: 180,
+                 *         speed: 2.77
+                 *     }
+                 * });
+                 *
+                 * @param {object} params - Parameters for the command.
+                 * @param {null|object} params.coordinates - The optional
+                 * geolocation coordinates to set. Matches the
+                 * `emulation.GeolocationCoordinates <https://w3c.github.io/webdriver-bidi/#commands-emulationsetgeolocationoverride>`_
+                 * value. If null or omitted and the `params.error` is set, the
+                 * emulation will be removed. Mutually exclusive with
+                 * `params.error`.
+                 * @param {object} params.error - The optional
+                 * geolocation error to emulate. Matches the
+                 * `emulation.GeolocationPositionError <https://w3c.github.io/webdriver-bidi/#commands-emulationsetgeolocationoverride>`_
+                 * value. Mutually exclusive with `params.coordinates`.
+                 * @param {null|Array.<(Context)>} [params.contexts] The
+                 * optional contexts parameter specifies which browsing contexts
+                 * to set the geolocation override on. It should be either an
+                 * array of Context objects (window or browsing context id), or
+                 * null. If null or omitted, the override will be set on the
+                 * current browsing context.
+                 * @returns {Promise<void>} Resolves when the geolocation
+                 * override is successfully set.
+                 */
+                set_geolocation_override: function (params) {
+                    // Ensure the bidi feature is enabled before calling the internal method
+                    assertBidiIsEnabled();
+                    return window.test_driver_internal.bidi.emulation.set_geolocation_override(
+                        params);
+                },
+            },
+            /**
+             * `log <https://www.w3.org/TR/webdriver-bidi/#module-log>`_ module.
              */
             log: {
                 entry_added: {
                     /**
-                     * @typedef {object} LogEntryAdded `log.entryAdded <https://w3c.github.io/webdriver-bidi/#event-log-entryAdded>`_ event.
+                     * @typedef {object} LogEntryAdded `log.entryAdded <https://www.w3.org/TR/webdriver-bidi/#event-log-entryAdded>`_ event.
                      */
 
                     /**
@@ -1561,6 +1754,10 @@
                     throw new Error(
                         "bidi.bluetooth.simulate_adapter is not implemented by testdriver-vendor.js");
                 },
+                disable_simulation: function () {
+                    throw new Error(
+                        "bidi.bluetooth.disable_simulation is not implemented by testdriver-vendor.js");
+                },
                 simulate_preconnected_peripheral: function() {
                     throw new Error(
                         'bidi.bluetooth.simulate_preconnected_peripheral is not implemented by testdriver-vendor.js');
@@ -1574,6 +1771,22 @@
                         throw new Error(
                             'bidi.bluetooth.request_device_prompt_updated.on is not implemented by testdriver-vendor.js');
                     }
+                },
+                gatt_connection_attempted: {
+                    async subscribe() {
+                        throw new Error(
+                            'bidi.bluetooth.gatt_connection_attempted.subscribe is not implemented by testdriver-vendor.js');
+                    },
+                    on() {
+                        throw new Error(
+                            'bidi.bluetooth.gatt_connection_attempted.on is not implemented by testdriver-vendor.js');
+                    }
+                }
+            },
+            emulation: {
+                set_geolocation_override: function (params) {
+                    throw new Error(
+                        "bidi.emulation.set_geolocation_override is not implemented by testdriver-vendor.js");
                 }
             },
             log: {
